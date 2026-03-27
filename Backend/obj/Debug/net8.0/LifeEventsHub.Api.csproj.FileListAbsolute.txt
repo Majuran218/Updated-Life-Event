@@ -756,3 +756,4 @@ D:\Life-Event- Project\Final-Life-Hub-main\Final-Life-Hub-main\Backend\obj\Debug
 D:\Life-Event- Project\Final-Life-Hub-main\Final-Life-Hub-main\Backend\obj\Debug\net8.0\LifeEventsHub.Api.pdb
 D:\Life-Event- Project\Final-Life-Hub-main\Final-Life-Hub-main\Backend\obj\Debug\net8.0\LifeEventsHub.Api.genruntimeconfig.cache
 D:\Life-Event- Project\Final-Life-Hub-main\Final-Life-Hub-main\Backend\obj\Debug\net8.0\ref\LifeEventsHub.Api.dll
+D:\Life-Event- Project\Final-Life-Hub-main\Final-Life-Hub-main\Backend\obj\Debug\net8.0\LifeEventsHub.Api.sourcelink.json
