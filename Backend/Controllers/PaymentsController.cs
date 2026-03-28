@@ -312,3 +312,5 @@ public class PaymentsController : ControllerBase
 public record CreateCheckoutRequest(int DraftId);
 public record VerifySessionRequest(string SessionId);
 public record ConfirmPaymentRequest(int DraftId);
+
+
