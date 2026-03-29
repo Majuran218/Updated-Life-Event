@@ -59,13 +59,14 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200")
               .AllowAnyMethod()
               .AllowAnyHeader();
+              .AllowCredentials();
     });
 });
 
 var app = builder.Build();
 
 app.UseStaticFiles();
-app.UseCors();
+app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
 

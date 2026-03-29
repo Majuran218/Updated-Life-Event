@@ -99,8 +99,14 @@ export class ApiService {
   }
 
   confirmPaymentMock(draftId: number): Observable<EventDetailDto> {
-    return this.http.post<EventDetailDto>(`${API}/payments/confirm-mock`, { draftId });
-  }
+  return this.http.post<EventDetailDto>(
+    `${API}/payments/confirm-mock`, 
+    { draftId },                          // 👈 camelCase matches C# record ConfirmPaymentRequest(int DraftId)
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
+}
 
   createEvent(formData: FormData): Observable<EventDetailDto> {
     return this.http.post<EventDetailDto>(`${API}/events`, formData);

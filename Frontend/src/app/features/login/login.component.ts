@@ -22,9 +22,22 @@ import { AuthService } from '../../services/auth.service';
           <label>Email *</label>
           <input type="email" [(ngModel)]="email" name="email" placeholder="you@example.com" required />
         </div>
+
+
+
         <div class="form-group">
           <label>Password *</label>
           <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" required />
+
+<button 
+              type="button" 
+              class="password-toggle" 
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <span class="eye-icon">{{ showPassword ? '👁️' : '👁️‍🗨️' }}</span>
+            </button>
+
         </div>
         @if (error()) {
           <div class="error-msg">{{ error() }}</div>
@@ -66,9 +79,12 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   email = '';
   password = '';
+  showpassword = false;
   loading = signal(false);
   error = signal('');
   returnUrl = '/';
+togglePasswordVisibility: any;
+showPassword: any;
 
   constructor(
     private auth: AuthService,

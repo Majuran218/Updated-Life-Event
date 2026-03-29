@@ -500,6 +500,7 @@ export class PaymentComponent {
         }
       },
       error: (err) => {
+         console.error('Checkout error:', err);
         const msg = err.error?.message || '';
         if (msg.includes('not configured')) {
           this.payWithMock();
@@ -512,19 +513,36 @@ export class PaymentComponent {
   }
 
   payWithMock() {
-    if (!this.draftId || this.draftId <= 0) return;
-    this.paying.set(true);
-    this.error.set('');
-    this.api.confirmPaymentMock(this.draftId).subscribe({
-      next: (ev: { id: number }) => {
-        this.stats.loadFromApi();
-        this.paying.set(false);
-        this.router.navigate(['/event', ev.id]);
-      },
-      error: (err: { error?: { message?: string } }) => {
+  if (!this.draftId || this.draftId <= 0) return;
+  this.paying.set(true);
+  this.error.set('');
+
+  this.api.confirmPaymentMock(this.draftId).subscribe({
+    next: (ev: any) => {                            // 👈 use 'any' — backend returns EventDetailDto
+      console.log('Mock payment success:', ev);
+      this.stats.loadFromApi();
+      this.paying.set(false);
+      this.router.navigate(['/event', ev.id]);      // ev.id exists on EventDetailDto
+    },
+    error: (err: any) => {
+      // 👇 Log full error to see exactly what's failing
+      console.error('Mock payment failed:', err);
+      console.error('Status code:', err.status);
+      console.error('Error body:', err.error);
+
+      if (err.status === 401) {
+        this.error.set('You must be logged in to complete payment. Please log in and try again.');
+      } else if (err.status === 403) {
+        this.error.set('You do not have permission to publish this draft.');
+      } else if (err.status === 404) {
+        this.error.set('Draft event not found. Please go back and create the event again.');
+      } else if (err.status === 0) {
+        this.error.set('Cannot connect to server. Make sure the backend is running on port 5000.');
+      } else {
         this.error.set(err.error?.message || 'Payment failed. Please try again.');
-        this.paying.set(false);
       }
-    });
-  }
+      this.paying.set(false);
+    }
+  });
+}
 }
