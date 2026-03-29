@@ -92,6 +92,8 @@ import { ApiService } from '../../services/api.service';
           </div>
         </div>
 
+
+
         <!-- SUBJECT -->
         <div class="form-group">
           <label>Subject</label>
@@ -106,11 +108,18 @@ import { ApiService } from '../../services/api.service';
           />
           @if (subjectInput.invalid && (subjectInput.dirty || subjectInput.touched || formSubmitted)) {
             <div class="validation-error">
+                @if (subjectInput.errors?.['required']) {
+                  <small>Subject is required.</small>
+                }
+                @if (subjectInput.errors?.['minlength']) {
+                  <small>Subject must be at least 5 characters.</small>  
+                }
               @if (subjectInput.errors?.['maxlength']) {
                 <small>Subject cannot exceed 100 characters.</small>
               }
             </div>
           }
+            
           <div class="field-hint">
             <span class="char-count" [class.over]="subject.length > 100">
               {{ subject.length }}/100
@@ -290,7 +299,7 @@ export class ContactComponent {
     form.control.markAllAsTouched();
 
     if (form.invalid) {
-      this.error.set('Please fix the errors above before submitting.');
+      this.error.set('Please Enter the required fields above before submitting.');
       return;
     }
 

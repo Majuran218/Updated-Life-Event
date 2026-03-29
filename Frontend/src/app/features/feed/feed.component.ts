@@ -108,6 +108,7 @@ import { EventStatsService } from '../../services/event-stats.service';
       display: flex;
       gap: 0.75rem;
       margin-bottom: 1rem;
+      justify-content: center;
     }
     .search-input {
       flex: 1;
@@ -293,16 +294,21 @@ export class FeedComponent implements OnInit {
 
   setDateRange(range: 'all' | 'thisYear' | 'lastYear' | 'custom') {
     this.dateRange.set(range);
-    const year = new Date().getFullYear();
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+    const lastYear = year - 1;
     if (range === 'all') {
       this.fromDate = '';
       this.toDate = '';
     } else if (range === 'thisYear') {
       this.fromDate = `${year}-01-01`;
-      this.toDate = `${year}-12-31`;
+      this.toDate = todayStr;
     } else if (range === 'lastYear') {
-      this.fromDate = `${year - 1}-01-01`;
-      this.toDate = `${year - 1}-12-31`;
+      this.fromDate = `${lastYear}-01-01`;
+      this.toDate = `${lastYear}-12-31`;
     }
     this.page.set(1);
     this.events.set([]);
