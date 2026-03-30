@@ -1,26 +1,53 @@
+// Core Angular modules
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+// Application services
 import { EventStatsService } from './services/event-stats.service';
 import { AuthService } from './services/auth.service';
+
+// Layout components
+import { FooterComponent } from './components/footer/footer.component';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    FooterComponent
+  ],
   template: `
+
+
     <div class="top-bar">
       <div class="container">
         <span class="top-bar-24">24/7</span>
         <a href="tel:+18001234567" class="top-bar-phone">+1 800-123-4567</a>
       </div>
     </div>
+
+
+
+
+
     <header class="header">
       <div class="container header-inner">
+
         <a routerLink="/" class="logo">
-          <span class="logo-icon">✦</span>
+        
+          <img src="assets/logo.png" alt="Life Events Logo" class="logo-img"/>
+        
           Life Events Memory Keeper
         </a>
+
+
+
+
         <nav class="nav">
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Feed</a>
           <a routerLink="/create-event" routerLinkActive="active">Create Event</a>
@@ -54,11 +81,7 @@ import { AuthService } from './services/auth.service';
     <main class="main">
       <router-outlet></router-outlet>
     </main>
-    <footer class="footer">
-      <div class="container">
-        <p>© {{ year }} Life Events Hub. Share moments that matter.</p>
-      </div>
-    </footer>
+    <app-footer></app-footer>
   `,
   styles: [`
     .top-bar {
@@ -67,6 +90,14 @@ import { AuthService } from './services/auth.service';
       padding: 0.4rem 1.5rem;
       font-size: 0.875rem;
     }
+
+    .logo-img {
+  width: 80px;        /* Adjust size as needed */
+  height: 50px;
+  object-fit: contain;
+  vertical-align: middle;
+  margin-right: 8px;
+}
     .top-bar .container {
       display: flex;
       align-items: center;
@@ -161,16 +192,8 @@ import { AuthService } from './services/auth.service';
     }
     .summary-chip strong { color: white; }
     .main { min-height: calc(100vh - 160px); padding: 2rem 0; }
-    .footer {
-      background: var(--primary-dark);
-      color: rgba(255,255,255,0.85);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      margin-top: 3rem;
-    }
   `]
 })
 export class AppComponent {
-  year = new Date().getFullYear();
   constructor(public stats: EventStatsService, public auth: AuthService) {}
 }

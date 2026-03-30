@@ -119,6 +119,8 @@ import { ApiService } from '../../services/api.service';
 
           <!-- NAME + EMAIL row -->
           <div class="form-row">
+
+
             <div class="form-group">
               <label for="name">Name <span class="req">*</span></label>
               <input
@@ -176,9 +178,6 @@ import { ApiService } from '../../services/api.service';
 
 
 
-
-
-
           <!-- PHONE (optional) -->
           <div class="form-group">
             <label for="phone">Phone <span class="req">*</span></label>
@@ -187,14 +186,24 @@ import { ApiService } from '../../services/api.service';
               type="tel"
               [(ngModel)]="phone"
               name="phone"
+              #phoneInput="ngModel"
               placeholder="+44 7700 900000"
-              minlength="2"
-              maxlength="50"
-              [class.invalid]="nameInput.invalid && (nameInput.dirty || nameInput.touched || formSubmitted)"
+              minlength="9"
+              maxlength="15"
+              [class.invalid]="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched || formSubmitted)"
             />
+              @if (phoneInput.invalid && (phoneInput.dirty || phoneInput.touched || formSubmitted)) {
+                <div class="validation-error">
+                  @if (phoneInput.errors?.['required']) { <small>Phone is required.</small> }
+                  @if (phoneInput.errors?.['minlength']) { <small>Please Enter a valid phone number.</small> }
+              </div>
+              }
 
-            
-          </div>
+          <span class="char-count" [class.over]="phone.length > 15">{{ phone.length }}/15</span>
+                  
+                </div>
+              
+          
 
 
 
