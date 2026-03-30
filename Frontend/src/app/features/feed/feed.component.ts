@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService, EventListDto } from '../../services/api.service';
 import { EventStatsService } from '../../services/event-stats.service';
 
+
 @Component({
   selector: 'app-feed',
   standalone: true,

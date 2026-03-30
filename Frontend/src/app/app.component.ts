@@ -92,7 +92,7 @@ import { FooterComponent } from './components/footer/footer.component';
     }
 
     .logo-img {
-  width: 80px;        /* Adjust size as needed */
+  width: 120px;        /* Adjust size as needed */
   height: 50px;
   object-fit: contain;
   vertical-align: middle;

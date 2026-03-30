@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { environment } from '../../../environments/environment.development';
+
 
 @Component({
   selector: 'app-contact',
@@ -593,6 +595,12 @@ export class ContactComponent {
   success = signal(false);
   error = signal('');
   formSubmitted = false;
+
+
+
+  getEvents() {
+    return this.api.getEvents(1, 12);
+  }
 
   constructor(private api: ApiService) {}
 

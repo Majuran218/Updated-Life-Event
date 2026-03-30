@@ -25,6 +25,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Life Events Hub API", Version = "v1" });
@@ -33,7 +34,7 @@ builder.Services.AddSwaggerGen(c =>
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Server=localhost;Database=lifeeventshub;User=root;Password=root;";
 
-// Create database if it doesn't exist (connect without database first)
+// Create database if it doesn't exist
 var connBuilder = new MySqlConnectionStringBuilder(connStr);
 var database = connBuilder.Database;
 connBuilder.Database = "";
@@ -52,21 +53,30 @@ builder.Services.AddScoped<FileStorageService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddSingleton<PricingService>();
 builder.Services.AddSingleton<StripeService>();
+
+// ✅ FIXED: Added all possible frontend ports
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-              .AllowCredentials();
+        policy
+            .WithOrigins(
+                "http://localhost:4200",
+                "http://localhost:56604",
+                "http://localhost:56605",
+                "http://localhost:3000"
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
 var app = builder.Build();
 
+// ✅ FIXED: Correct middleware order
 app.UseStaticFiles();
-app.UseCors("AllowAngular");
+app.UseCors("AllowAngular");      // Must be before Auth
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -83,7 +93,6 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.EnsureCreatedAsync();
 
-    // Seed test user - always ensure it exists (for flow testing)
     var testEmail = "test@example.com";
     var testUser = await db.Users.FirstOrDefaultAsync(u => u.Email == testEmail);
     if (testUser == null)
@@ -99,7 +108,6 @@ using (var scope = app.Services.CreateScope())
         db.Users.Add(testUser);
         await db.SaveChangesAsync();
     }
-
 }
 
 app.Run();

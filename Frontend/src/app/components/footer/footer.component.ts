@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
         <!-- Brand Section -->
         <div class="footer-brand">
           <a routerLink="/" class="footer-logo">
-            <img src="assets/your-logo.png" alt="Life Events Hub Logo" class="footer-logo-img" />
+            <img src="assets/logo.png" alt="Life Events Hub Logo" class="footer-logo-img" />
             Life Events Hub
           </a>
           <p class="footer-tagline">Share moments that matter.</p>
