@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LifeEventsHub.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2c62393d1d7b7a3aae3fd75769f7e9e693f7213")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ace4b82a19591238dcfecb2f5312f660924553a")]
 [assembly: System.Reflection.AssemblyProductAttribute("LifeEventsHub.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LifeEventsHub.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
