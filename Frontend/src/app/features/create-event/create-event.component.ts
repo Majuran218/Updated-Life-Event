@@ -320,7 +320,7 @@ import { CurrencyService, CurrencyInfo } from '../../services/currency.service';
 
 
 
-        <!-- ????????? COUNTRY ??? auto-sets currency ????????? -->
+      
         <div class="form-group">
           <label>Country *</label>
           <select [(ngModel)]="country" name="country" required #countryInput="ngModel"
@@ -493,7 +493,6 @@ import { CurrencyService, CurrencyInfo } from '../../services/currency.service';
           }
         </div>
 
-        <!-- ????????? DISPLAY DURATION ????????? -->
         <div class="form-group display-duration-section">
           <div class="duration-header">
             <label class="duration-label">Display Duration *</label>
@@ -529,7 +528,7 @@ import { CurrencyService, CurrencyInfo } from '../../services/currency.service';
           }
         </div>
 
-        <!-- ????????? VISIBILITY ????????? -->
+        
         <div class="form-group">
           <label>Privacy / Visibility *</label>
           <select [(ngModel)]="visibility" name="visibility" required #visibilityInput="ngModel"

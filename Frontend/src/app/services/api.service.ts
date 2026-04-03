@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const API = 'http://localhost:5000/api';
@@ -62,6 +62,29 @@ export interface PagedResult<T> {
 export class ApiService {
   constructor(private http: HttpClient) {}
 
+  // ✅ Helper: gets token from localStorage
+  private getAuthHeaders(): { headers: HttpHeaders } {
+    const token = localStorage.getItem('token');
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token ?? ''}`
+      })
+    };
+  }
+
+  // ✅ Helper: for JSON requests with auth
+  private getAuthJsonHeaders(): { headers: HttpHeaders } {
+    const token = localStorage.getItem('token');
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token ?? ''}`,
+        'Content-Type': 'application/json'
+      })
+    };
+  }
+
+  // ── Events ──────────────────────────────────────────────────────────────────
+
   getEvents(
     page = 1,
     pageSize = 12,
@@ -83,58 +106,113 @@ export class ApiService {
   }
 
   getDisplayOptions(): Observable<{ days: number; price: number; label: string }[]> {
-    return this.http.get<{ days: number; price: number; label: string }[]>(`${API}/payments/display-options`);
+    return this.http.get<{ days: number; price: number; label: string }[]>(
+      `${API}/payments/display-options`
+    );
   }
 
-  saveEventDraft(formData: FormData): Observable<{ draftId: number; displayDays: number; price: number; label: string }> {
-    return this.http.post<{ draftId: number; displayDays: number; price: number; label: string }>(`${API}/events/save-draft`, formData);
+  // ✅ FIXED: now sends Authorization header
+  saveEventDraft(formData: FormData): Observable<{
+    draftId: number;
+    displayDays: number;
+    price: number;
+    label: string;
+  }> {
+    return this.http.post<{
+      draftId: number;
+      displayDays: number;
+      price: number;
+      label: string;
+    }>(`${API}/events/save-draft`, formData, this.getAuthHeaders());
   }
 
+  // ✅ FIXED: now sends Authorization header
   createCheckoutSession(draftId: number): Observable<{ url: string }> {
-    return this.http.post<{ url: string }>(`${API}/payments/create-checkout-session`, { draftId });
+    return this.http.post<{ url: string }>(
+      `${API}/payments/create-checkout-session`,
+      { draftId },
+      this.getAuthJsonHeaders()
+    );
+  }
+
+  // ✅ FIXED: now sends Authorization header
+  confirmPaymentMock(draftId: number): Observable<EventDetailDto> {
+    return this.http.post<EventDetailDto>(
+      `${API}/payments/confirm-mock`,
+      { draftId },
+      this.getAuthJsonHeaders()
+    );
   }
 
   verifyStripeSession(sessionId: string): Observable<EventDetailDto> {
-    return this.http.post<EventDetailDto>(`${API}/payments/verify-session`, { sessionId });
+    return this.http.post<EventDetailDto>(
+      `${API}/payments/verify-session`,
+      { sessionId },
+      this.getAuthJsonHeaders()
+    );
   }
-
-  confirmPaymentMock(draftId: number): Observable<EventDetailDto> {
-  return this.http.post<EventDetailDto>(
-    `${API}/payments/confirm-mock`, 
-    { draftId },                          // 👈 camelCase matches C# record ConfirmPaymentRequest(int DraftId)
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  );
-}
 
   createEvent(formData: FormData): Observable<EventDetailDto> {
-    return this.http.post<EventDetailDto>(`${API}/events`, formData);
+    return this.http.post<EventDetailDto>(
+      `${API}/events`,
+      formData,
+      this.getAuthHeaders()
+    );
   }
 
+  // ✅ FIXED: now sends Authorization header
   updateEvent(id: number, formData: FormData): Observable<EventDetailDto> {
-    return this.http.put<EventDetailDto>(`${API}/events/${id}`, formData);
+    return this.http.put<EventDetailDto>(
+      `${API}/events/${id}`,
+      formData,
+      this.getAuthHeaders()
+    );
   }
 
+  // ✅ FIXED: now sends Authorization header
   deleteEvent(id: number): Observable<void> {
-    return this.http.delete<void>(`${API}/events/${id}`);
+    return this.http.delete<void>(
+      `${API}/events/${id}`,
+      this.getAuthHeaders()
+    );
   }
 
-  addWish(eventId: number, senderName: string, message: string, mediaUrl?: string): Observable<WishDto> {
-    return this.http.post<WishDto>(`${API}/events/${eventId}/wishes`, { senderName, message, mediaUrl });
+  addWish(
+    eventId: number,
+    senderName: string,
+    message: string,
+    mediaUrl?: string
+  ): Observable<WishDto> {
+    return this.http.post<WishDto>(
+      `${API}/events/${eventId}/wishes`,
+      { senderName, message, mediaUrl }
+    );
   }
 
   uploadWishMedia(eventId: number, file: File): Observable<{ url: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<{ url: string }>(`${API}/events/${eventId}/wishes/upload-media`, formData);
+    return this.http.post<{ url: string }>(
+      `${API}/events/${eventId}/wishes/upload-media`,
+      formData
+    );
   }
 
-  submitContact(name: string, email: string, subject: string, message: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${API}/contact`, { name, email, subject, message });
+  submitContact(
+    name: string,
+    email: string,
+    subject: string,
+    message: string
+  ): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${API}/contact`,
+      { name, email, subject, message }
+    );
   }
 
   getCountryStats(): Observable<{ country: string; count: number }[]> {
-    return this.http.get<{ country: string; count: number }[]>(`${API}/events/stats/count-by-country`);
+    return this.http.get<{ country: string; count: number }[]>(
+      `${API}/events/stats/count-by-country`
+    );
   }
 }

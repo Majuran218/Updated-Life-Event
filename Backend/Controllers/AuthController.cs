@@ -21,6 +21,7 @@ public class AuthController : ControllerBase
         _jwt = jwt;
         _fileStorage = fileStorage;
     }
+    
 
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterDto dto)
