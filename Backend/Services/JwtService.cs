@@ -11,6 +11,7 @@ public class JwtService
     private readonly IConfiguration _config;
 
     public JwtService(IConfiguration config) => _config = config;
+    
 
     public string GenerateToken(User user)
     {
